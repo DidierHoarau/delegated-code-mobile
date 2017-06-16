@@ -1,13 +1,16 @@
 {
-  "description": "Delegated Code",
-  "license": "MIT",
-  "readme": "",
+  "description": "NativeScript Application",
+  "license": "SEE LICENSE IN <your-license-filename>",
+  "readme": "NativeScript Application",
   "repository": "<fill-your-repository-here>",
   "nativescript": {
-    "id": "org.didierhoarau.delegatedcode",
+    "id": "org.nativescript.delegatedcodemobile",
     "tns-android": {
       "version": "3.0.1"
     }
+  },
+  "scripts": {
+    "run:dev": "tns run android"
   },
   "dependencies": {
     "@angular/animations": "~4.1.0",
