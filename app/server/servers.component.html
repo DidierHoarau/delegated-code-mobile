@@ -1,2 +1,11 @@
 <ActionBar title="Servers" class="action-bar"></ActionBar>
-<Label class="h2">List of servers</Label>
+<StackLayout class="m-15" sdkExampleTitle sdkToggleNavButton>
+  <Button class="btn btn-primary btn-active" id="button" text="Add Server" (tap)="onAddServerTap($event)"></Button>
+  <ListView [items]="servers" (itemTap)="onServerTap($event)" class="list-group">
+    <ng-template let-server="item" let-i="index" let-odd="odd" let-even="even">
+        <GridLayout class="list-group-item">
+            <Label [text]="server.url"></Label>
+        </GridLayout>
+    </ng-template>
+  </ListView>
+</StackLayout>
