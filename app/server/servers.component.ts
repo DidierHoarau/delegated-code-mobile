@@ -1,11 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventData } from 'data/observable';
 import { Button } from 'ui/button';
+import {
+  ModalDialogService,
+  ModalDialogOptions
+} from 'nativescript-angular/modal-dialog';
 import dialogs = require('ui/dialogs');
 
 import { Server } from './server';
 import { ServerService } from './server.service';
+import { ServerEditDialog } from './server-edit-dialog';
 
 @Component({
   selector: 'ns-servers',
@@ -20,7 +25,9 @@ export class ServersComponent implements OnInit {
 
   constructor(
     private serverService: ServerService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modalService: ModalDialogService,
+    private viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit(): void {
@@ -34,7 +41,15 @@ export class ServersComponent implements OnInit {
     });
   }
 
-  onServerTap(args) {}
+  onServerTap(args) {
+    const options: ModalDialogOptions = {
+      context: { serverId: this.servers[args.index].getId() },
+      viewContainerRef: this.viewContainerRef
+    };
+    this.modalService.showModal(ServerEditDialog, options).then(() => {
+      this.refreshServerList();
+    });
+  }
 
   onAddServerTap(args: EventData) {
     dialogs.prompt('Server Url').then(r => {

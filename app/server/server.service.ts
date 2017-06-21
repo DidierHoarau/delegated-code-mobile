@@ -21,12 +21,18 @@ export class ServerService {
         configFile
           .readText()
           .then(text => {
-            let serverList;
+            let serverList = [];
+            let serverListJson;
             try {
-              serverList = JSON.parse(text);
+              serverListJson = JSON.parse(text);
             } catch (error) {
               console.error(`${this.LOGTAG} List: Error: ${error}`);
               return reject(new Error('Error reading server config file'));
+            }
+            for (let i = 0; i < serverListJson.length; i++) {
+              const server = new Server(serverListJson[i].id);
+              server.setUrl(serverListJson[i].url);
+              serverList.push(server);
             }
             console.info(`${this.LOGTAG} List: ${serverList.length} servers`);
             resolve(serverList);
@@ -39,6 +45,24 @@ export class ServerService {
         console.info(`${this.LOGTAG} List: no server file yet`);
         resolve([]);
       }
+    });
+  }
+
+  get(serverId: string): Promise<Server> {
+    return new Promise((resolve, reject) => {
+      this.list()
+        .then(serverList => {
+          for (let i = 0; i < serverList.length; i++) {
+            if (serverList[i].getId() === serverId) {
+              return resolve(serverList[i]);
+            }
+          }
+          reject(new Error(`Server ${serverId} not found`));
+        })
+        .catch(error => {
+          console.error(`${this.LOGTAG} Get: Error: ${error}`);
+          reject(new Error('Error getting server'));
+        });
     });
   }
 
@@ -62,5 +86,28 @@ export class ServerService {
     });
   }
 
-  delete() {}
+  delete(serverId: string): Promise<VoidFunction> {
+    return new Promise((resolve, reject) => {
+      console.info(`${this.LOGTAG} Deleting: ${serverId}`);
+      this.list()
+        .then(serverList => {
+          for (let i = 0; i < serverList.length; i++) {
+            if (serverList[i].getId() === serverId) {
+              serverList.splice(i, 1);
+            }
+          }
+          return this.configFileFolder
+            .getFile(this.configFileName)
+            .writeText(JSON.stringify(serverList));
+        })
+        .then(() => {
+          console.info(`${this.LOGTAG} Delete: Server deleted`);
+          resolve();
+        })
+        .catch(error => {
+          console.error(`${this.LOGTAG} Get: Error: ${error}`);
+          reject(new Error('Error getting server'));
+        });
+    });
+  }
 }

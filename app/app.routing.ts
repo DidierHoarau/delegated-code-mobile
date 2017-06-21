@@ -6,7 +6,7 @@ import { ServersComponent } from './server/servers.component';
 import { LocalReposComponent } from './local-repo/local-repos.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'local-repos', pathMatch: 'full' },
+  { path: '', redirectTo: 'servers', pathMatch: 'full' },
   { path: 'servers', component: ServersComponent },
   { path: 'local-repos', component: LocalReposComponent }
 ];
