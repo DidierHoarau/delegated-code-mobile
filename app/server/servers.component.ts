@@ -7,6 +7,7 @@ import {
   ModalDialogOptions
 } from 'nativescript-angular/modal-dialog';
 import dialogs = require('ui/dialogs');
+import * as _ from 'lodash';
 
 import { Server } from './server';
 import { ServerService } from './server.service';
@@ -36,36 +37,27 @@ export class ServersComponent implements OnInit {
 
   refreshServerList() {
     console.info(`${this.LOGTAG} Refresh Server List`);
-    this.serverService.list().then(servers => {
-      this.servers = servers;
-    });
+    this.serverService
+      .list()
+      .then(servers => {
+        this.servers = servers;
+      })
+      .catch(error => {});
   }
 
-  onServerTap(args) {
+  onServerEditTap(args) {
     const options: ModalDialogOptions = {
-      context: { serverId: this.servers[args.index].getId() },
+      context: {},
       viewContainerRef: this.viewContainerRef
     };
-    this.modalService.showModal(ServerEditDialog, options).then(() => {
-      this.refreshServerList();
-    });
-  }
-
-  onAddServerTap(args: EventData) {
-    dialogs.prompt('Server Url').then(r => {
-      if (r.text.trim() == '') {
-        return;
-      }
-      const newServer = new Server();
-      newServer.setUrl(r.text.trim());
-      this.serverService
-        .add(newServer)
-        .then(() => {
-          this.refreshServerList();
-        })
-        .catch(error => {
-          console.error(`${this.LOGTAG} Add Server Tap Error: ${error}`);
-        });
-    });
+    if (_.has(args, 'index')) {
+      options.context.serverId = this.servers[args.index].getId();
+    }
+    this.modalService
+      .showModal(ServerEditDialog, options)
+      .then(() => {
+        this.refreshServerList();
+      })
+      .catch(error => {});
   }
 }

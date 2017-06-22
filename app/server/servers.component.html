@@ -1,7 +1,7 @@
 <ActionBar title="Servers" class="action-bar"></ActionBar>
 <StackLayout class="m-15" sdkExampleTitle sdkToggleNavButton>
-  <Button class="btn btn-primary btn-active" id="button" text="Add Server" (tap)="onAddServerTap($event)"></Button>
-  <ListView [items]="servers" (itemTap)="onServerTap($event)" class="list-group">
+  <Button class="btn btn-primary btn-active" id="button" text="Add Server" (tap)="onServerEditTap($event)"></Button>
+  <ListView [items]="servers" (itemTap)="onServerEditTap($event)" class="list-group">
     <ng-template let-server="item" let-i="index" let-odd="odd" let-even="even">
         <GridLayout class="list-group-item">
             <Label [text]="server.url"></Label>

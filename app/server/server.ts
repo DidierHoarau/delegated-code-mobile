@@ -10,6 +10,13 @@ export class Server {
     }
   }
 
+  public toJson(): any {
+    return {
+      id: this.id,
+      url: this.url
+    };
+  }
+
   public setUrl(url: string) {
     this.url = url;
   }
