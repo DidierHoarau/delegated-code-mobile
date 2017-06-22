@@ -11,10 +11,9 @@ import { ServerService } from './server.service';
   selector: 'modal-content',
   template: `
     <StackLayout margin="24" horizontalAlignment="center" verticalAlignment="center">
-      <Label [text]="server.getUrl()"></Label>
       <StackLayout class="input-field">
         <Label class="label" text="Url" row="1" col="0" textWrap="true"></Label>
-        <TextField class="input input-border" id="serverUrlInput" (textChange)="onUrlChange($event)" hint="https://example.com:8080/" row="1" col="1"></TextField>
+        <TextField class="input input-border" id="serverUrlInput" [text]="serverUrl" (textChange)="onUrlChange($event)" hint="https://example.com:8080/" row="1" col="1"></TextField>
       </StackLayout>
       <StackLayout orientation="horizontal" marginTop="12">
         <Button text="ok" (tap)="validate()"></Button>
@@ -42,6 +41,7 @@ export class ServerEditDialog {
         .get(params.context.serverId)
         .then(server => {
           this.server = server;
+          this.serverUrl = server.getUrl();
         })
         .catch(error => {});
     } else {
